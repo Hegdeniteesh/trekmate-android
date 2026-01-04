@@ -13,3 +13,22 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Firebase
+app/google-services.json
+
+# Local files
+local.properties
+
+# Keystore
+*.jks
+*.keystore
+
+# Build
+/build
+/app/build
+
+# Android Studio
+.idea/
+.gradle/
+
