@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.trekmate.R;
 import com.app.trekmate.model.User;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,15 +27,12 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialize Firebase
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Bind views
         email = findViewById(R.id.regEmail);
         password = findViewById(R.id.regPassword);
 
-        // Button click
         findViewById(R.id.registerBtn).setOnClickListener(v -> registerUser());
     }
 
@@ -54,22 +52,22 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Firebase Auth registration
+        // Firebase Auth
         auth.createUserWithEmailAndPassword(mail, pass)
                 .addOnSuccessListener(authResult -> {
 
-                    // 🔑 Get auto-generated UID
                     String uid = auth.getCurrentUser().getUid();
 
-                    // Create user profile object
+                    // Create user object
                     User user = new User(
                             uid,
                             mail,
-                            "New User",
-                            ""
+                            "New User",          // default name
+                            "",                  // phone empty initially
+                            Timestamp.now()      // createdAt
                     );
 
-                    // Save user to Firestore using UID as document ID
+                    // Save to Firestore
                     db.collection("users")
                             .document(uid)
                             .set(user)

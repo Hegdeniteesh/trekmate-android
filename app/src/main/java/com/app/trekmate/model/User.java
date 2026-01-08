@@ -1,22 +1,43 @@
 package com.app.trekmate.model;
 
+import com.google.firebase.Timestamp;
+
 public class User {
 
-    public String uid;
-    public String email;
-    public String name;
-    public String phone;
-    public long createdAt;
+    private String uid;
+    private String email;
+    private String name;
+    private String phone;
+    private Timestamp createdAt;
 
-    public User() {
-        // Firestore needs empty constructor
-    }
+    // 🔹 Required empty constructor for Firestore
+    public User() {}
 
-    public User(String uid, String email, String name, String phone) {
+    public User(String uid, String email, String name, String phone, Timestamp createdAt) {
         this.uid = uid;
         this.email = email;
         this.name = name;
         this.phone = phone;
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = createdAt;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 }
