@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrekMate"
         tools:targetApi="35">
+
+        <meta-data
+            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+            android:value="false" />
+
         <activity
             android:name=".ui.auth.ForgotPasswordActivity"
             android:exported="false" />

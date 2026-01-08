@@ -3,30 +3,43 @@ package com.app.trekmate.ui.launcher;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.app.trekmate.R;
 import com.app.trekmate.ui.auth.LoginActivity;
 import com.app.trekmate.ui.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LauncherActivity extends AppCompatActivity {
 
+    private boolean navigated = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launcher);
+        // NO XML, NO VIEW BINDING, NOTHING
+    }
 
-        new Handler().postDelayed(() -> {
-            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                // User NOT logged in → Login screen
-                startActivity(new Intent(this, LoginActivity.class));
-            } else {
-                // User logged in → Home
-                startActivity(new Intent(this, HomeActivity.class));
-            }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (navigated) return;
+        navigated = true;
+
+        // Give Android time to finish startup work
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+
+            Intent intent = (auth.getCurrentUser() == null)
+                    ? new Intent(this, LoginActivity.class)
+                    : new Intent(this, HomeActivity.class);
+
+            startActivity(intent);
             finish();
-        }, 1500); // 1.5 sec splash
+
+        }, 300); // <-- THIS DELAY IS CRITICAL
     }
 }
