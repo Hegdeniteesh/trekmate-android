@@ -3,7 +3,7 @@ package com.app.trekmate.ui.auth;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
+import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,9 +15,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private EditText email, password;
     private FirebaseAuth auth;
-    private EditText emailInput, passwordInput;
-    private Button loginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,34 +25,43 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        emailInput = findViewById(R.id.emailInput);
-        passwordInput = findViewById(R.id.passwordInput);
-        loginBtn = findViewById(R.id.loginBtn);
+        email = findViewById(R.id.emailInput);
+        password = findViewById(R.id.passwordInput);
 
-        loginBtn.setOnClickListener(v -> loginUser());
+        findViewById(R.id.loginBtn).setOnClickListener(v -> loginUser());
+
+        findViewById(R.id.goToRegister).setOnClickListener(v ->
+                startActivity(new Intent(this, RegisterActivity.class)));
+
+        findViewById(R.id.forgotPassword).setOnClickListener(v ->
+                startActivity(new Intent(this, ForgotPasswordActivity.class)));
     }
 
     private void loginUser() {
-        String email = emailInput.getText().toString().trim();
-        String password = passwordInput.getText().toString().trim();
+        String mail = email.getText().toString().trim();
+        String pass = password.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email)) {
-            emailInput.setError("Email required");
+        if (TextUtils.isEmpty(mail)) {
+            email.setError("Email required");
             return;
         }
 
-        if (TextUtils.isEmpty(password)) {
-            passwordInput.setError("Password required");
+        if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
+            email.setError("Invalid email");
             return;
         }
 
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
+        if (TextUtils.isEmpty(pass)) {
+            password.setError("Password required");
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(mail, pass)
+                .addOnSuccessListener(result -> {
                     startActivity(new Intent(this, HomeActivity.class));
                     finish();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

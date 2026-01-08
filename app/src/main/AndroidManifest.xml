@@ -13,9 +13,14 @@
         android:theme="@style/Theme.TrekMate"
         tools:targetApi="35">
         <activity
+            android:name=".ui.auth.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false" />
@@ -24,6 +29,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
