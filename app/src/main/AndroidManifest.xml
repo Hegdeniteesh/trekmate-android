@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrekMate"
         tools:targetApi="35">
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="androidx.profileinstaller.ProfileInstallReceiver"
