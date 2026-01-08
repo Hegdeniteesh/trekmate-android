@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.content.Intent;
+import com.app.trekmate.ui.auth.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.trekmate.R;
-import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -40,6 +43,8 @@ public class ProfileActivity extends AppCompatActivity {
         phoneEt = findViewById(R.id.profilePhone);
 
         findViewById(R.id.updateBtn).setOnClickListener(v -> updateProfile());
+        findViewById(R.id.logoutBtn).setOnClickListener(v -> logoutUser());
+
 
         loadUserProfile();
     }
@@ -86,4 +91,18 @@ public class ProfileActivity extends AppCompatActivity {
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
     }
+
+    private void logoutUser() {
+
+        FirebaseAuth.getInstance().signOut();
+
+        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+
+        // 🔥 Clear back stack
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+        finish();
+    }
+
 }
