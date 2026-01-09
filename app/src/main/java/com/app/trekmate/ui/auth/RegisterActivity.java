@@ -15,10 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    // UI
     private EditText email, password;
 
-    // Firebase
     private FirebaseAuth auth;
     private FirebaseFirestore db;
 
@@ -41,7 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
         String mail = email.getText().toString().trim();
         String pass = password.getText().toString().trim();
 
-        // Validation
         if (TextUtils.isEmpty(mail) || TextUtils.isEmpty(pass)) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
             return;
@@ -52,28 +49,25 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Firebase Auth
         auth.createUserWithEmailAndPassword(mail, pass)
                 .addOnSuccessListener(authResult -> {
 
                     String uid = auth.getCurrentUser().getUid();
 
-                    // Create user object
                     User user = new User(
                             uid,
                             mail,
-                            "New User",          // default name
-                            "",                  // phone empty initially
-                            Timestamp.now()      // createdAt
+                            "New User",
+                            "",
+                            Timestamp.now()
                     );
 
-                    // Save to Firestore
                     db.collection("users")
                             .document(uid)
                             .set(user)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                                finish(); // back to Login
+                                finish();
                             })
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()
