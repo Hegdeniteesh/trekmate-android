@@ -8,6 +8,7 @@ public class User {
     private String email;
     private String name;
     private String phone;
+    public String photoUrl;
     private Timestamp createdAt;
 
     // 🔹 Required empty constructor for Firestore
@@ -18,6 +19,7 @@ public class User {
         this.email = email;
         this.name = name;
         this.phone = phone;
+        this.photoUrl = photoUrl;
         this.createdAt = createdAt;
     }
 
