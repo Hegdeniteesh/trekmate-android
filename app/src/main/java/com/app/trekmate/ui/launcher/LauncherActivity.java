@@ -7,6 +7,7 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.app.trekmate.R;
 import com.app.trekmate.ui.auth.LoginActivity;
 import com.app.trekmate.ui.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +19,7 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_launcher);
     }
 
     @Override
@@ -28,24 +29,22 @@ public class LauncherActivity extends AppCompatActivity {
         if (navigated) return;
         navigated = true;
 
-        //  Delay avoids Android background launch restriction + ANR
+
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
             FirebaseAuth auth = FirebaseAuth.getInstance();
-
             Intent intent;
+
             if (auth.getCurrentUser() == null) {
-                intent = new Intent(LauncherActivity.this, LoginActivity.class);
+                intent = new Intent(this, LoginActivity.class);
             } else {
-                intent = new Intent(LauncherActivity.this, HomeActivity.class);
+                intent = new Intent(this, HomeActivity.class);
             }
 
-            // Clear launcher from back stack
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
             startActivity(intent);
             finish();
 
-        }, 300);
+        }, 350);
     }
 }
