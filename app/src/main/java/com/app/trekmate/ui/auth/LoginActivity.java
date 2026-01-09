@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText email, password;
+    private EditText etEmail, etPassword;
     private FirebaseAuth auth;
 
     @Override
@@ -25,41 +26,44 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        email = findViewById(R.id.emailInput);
-        password = findViewById(R.id.passwordInput);
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
 
-        findViewById(R.id.loginBtn).setOnClickListener(v -> loginUser());
+        Button btnLogin = findViewById(R.id.btnLogin);
 
-        findViewById(R.id.goToRegister).setOnClickListener(v ->
+        btnLogin.setOnClickListener(v -> loginUser());
+
+        findViewById(R.id.tvRegister).setOnClickListener(v ->
                 startActivity(new Intent(this, RegisterActivity.class)));
 
-        findViewById(R.id.forgotPassword).setOnClickListener(v ->
+        findViewById(R.id.tvForgotPassword).setOnClickListener(v ->
                 startActivity(new Intent(this, ForgotPasswordActivity.class)));
     }
 
     private void loginUser() {
-        String mail = email.getText().toString().trim();
-        String pass = password.getText().toString().trim();
+        String mail = etEmail.getText().toString().trim();
+        String pass = etPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(mail)) {
-            email.setError("Email required");
+            etEmail.setError(getString(R.string.error_email_required));
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
-            email.setError("Invalid email");
+            etEmail.setError(getString(R.string.error_email_invalid));
             return;
         }
 
         if (TextUtils.isEmpty(pass)) {
-            password.setError("Password required");
+            etPassword.setError(getString(R.string.error_password_required));
             return;
         }
 
         auth.signInWithEmailAndPassword(mail, pass)
                 .addOnSuccessListener(result -> {
-                    startActivity(new Intent(this, HomeActivity.class));
-                    finish();
+                    Intent intent = new Intent(this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
