@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.trekmate.R;
@@ -36,7 +38,18 @@ public class ProfileActivity extends AppCompatActivity {
     private String uid;
     private Uri imageUri;
 
-    private static final int PICK_IMAGE = 101;
+    // image picker
+    private final ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                            imageUri = result.getData().getData();
+                            profileImage.setImageURI(imageUri);
+                            uploadProfilePhoto();
+                        }
+                    }
+            );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference();
 
-        // 🔐 Safety check (prevents ANR / crash)
+        // 🔐 Safety check
         if (auth.getCurrentUser() == null) {
             redirectToLogin();
             return;
@@ -69,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         loadUserProfile();
     }
 
-    // 🔹 Load user data
+    // Load user data
     private void loadUserProfile() {
         db.collection("users")
                 .document(uid)
@@ -94,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
                 );
     }
 
-    // 🔹 Update name + phone
+    //  Update name + phone
     private void updateProfile() {
         String name = nameEt.getText().toString().trim();
         String phone = phoneEt.getText().toString().trim();
@@ -122,19 +135,7 @@ public class ProfileActivity extends AppCompatActivity {
     // 📸 Open gallery
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE);
-    }
-
-    // 📸 Receive image
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
-            imageUri = data.getData();
-            profileImage.setImageURI(imageUri);
-            uploadProfilePhoto();
-        }
+        imagePickerLauncher.launch(intent);
     }
 
     // ☁ Upload to Firebase Storage
