@@ -19,7 +19,7 @@ public class User {
         this.email = email;
         this.name = name;
         this.phone = phone;
-        this.photoUrl = photoUrl;
+        this.photoUrl = "";
         this.createdAt = createdAt;
     }
 
@@ -38,6 +38,7 @@ public class User {
     public String getPhone() {
         return phone;
     }
+    public String getPhotoUrl() { return photoUrl; }
 
     public Timestamp getCreatedAt() {
         return createdAt;

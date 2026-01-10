@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.TrekMate" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#1B5E20</item>
-        <item name="colorSecondary">#4CAF50</item>
+
+        <!-- Material 3 primary colors -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary / container (Material 3 way) -->
+        <item name="colorSecondaryContainer">@color/teal_200</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/purple_700</item>
+
+        <!-- Required for Material3 widgets -->
+        <item name="android:forceDarkAllowed">false</item>
+
     </style>
+
 </resources>

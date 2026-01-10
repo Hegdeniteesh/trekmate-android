@@ -51,6 +51,10 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth.createUserWithEmailAndPassword(mail, pass)
                 .addOnSuccessListener(authResult -> {
+                    if (auth.getCurrentUser() == null) {
+                        Toast.makeText(this, "User creation failed. Try again.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     String uid = auth.getCurrentUser().getUid();
 
