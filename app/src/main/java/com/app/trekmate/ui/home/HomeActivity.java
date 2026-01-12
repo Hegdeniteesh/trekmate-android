@@ -2,48 +2,45 @@ package com.app.trekmate.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.trekmate.R;
 import com.app.trekmate.ui.auth.LoginActivity;
+import com.app.trekmate.ui.profile.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        auth = FirebaseAuth.getInstance(); // ✅ INIT HERE
+        auth = FirebaseAuth.getInstance();
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
-        Button logoutBtn = findViewById(R.id.logoutBtn);
-
-        logoutBtn.setOnClickListener(v -> {
-            auth.signOut();
-            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
-
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // TODO: Refresh trek API + upcoming journeys
+            swipeRefreshLayout.setRefreshing(false);
         });
+
+        findViewById(R.id.navProfile).setOnClickListener(v ->
+                startActivity(new Intent(this, ProfileActivity.class)));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         }
     }
-
 }
